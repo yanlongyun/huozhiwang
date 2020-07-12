@@ -1,0 +1,189 @@
+@startuml
+
+/'中心表'/
+!define CenterTable(name,desc) class name as "desc" << (E,#FFFFFF) >>  #CORNSILK
+/'子集表'/
+!define SubsetTable(name,desc) class name as "desc" << (S,#FFDEAD) >>
+/'子集-中心表'/
+!define SubsetCenterTable(name,desc) class name as "desc" << (S,#FF3030) >>  #CORNSILK
+/'功能表'/
+!define FunctionTable(name,desc) class name as "desc" << (F,#FFF0F5) >>
+/'关系表'/
+!define RelationTable(name,desc) class name as "desc" << (R,#D9F4EF) >>  #D9F4EF
+
+/'业务流程-中心表'/
+!define BusinessCenterTable(name,desc) class name as "desc" << (B,#FF3030) >> #CORNSILK
+/'业务流程表'/
+!define BusinessTable(name,desc) class name as "desc" << (B,#AB82FF) >>
+/'行为表'/
+!define BehaviourRecordTable(name,desc) class name as "desc" << (H,#8DB6CD) >>
+/'验证表'/
+!define VerificationTable(name,desc) class name as "desc" << (V,#B5B5B5) >>
+
+
+
+!define varchar(x) varchar x
+!define tinyint(x) tinyint x
+!define smallint(x) smallint x
+!define mediumint(x) mediumint x
+!define int(x) bigint x
+!define bigint(x) bigint x
+!define decimal(x,y) decimal x,y
+
+hide methods
+hide stereotypes
+
+skinparam class {
+    BackgroundColor white
+    ArrowColor red
+    BorderColor MidnightBlue
+}
+
+title 货值网概念模型
+
+
+
+
+CenterTable(user, "用户\n表示在网站上购买、收藏、评论商品的买家"){
+        `id` bigint(64) unsigned NOT NULL COMMENT '主键',
+        `type` tinyint(4) DEFAULT '-1' COMMENT '用户类型,0:个人用户；1：商家用户；-1：未知',
+        `phone` varchar(256) DEFAULT '' COMMENT '手机，加唯一索引，可用作登陆',
+        `user_name` varchar(256) DEFAULT '' COMMENT '用户名，加唯一索引，可用作登陆',
+        `password` varchar(256) DEFAULT '' COMMENT '密码',
+        `salt` varchar(32) DEFAULT '' COMMENT '密码加盐',
+        `status` tinyint(4) DEFAULT NULL COMMENT '状态',
+
+        `version` int(8) DEFAULT '0' COMMENT '版本',
+        `creator` bigint(64) unsigned DEFAULT NULL COMMENT '创建者',
+        `updator` bigint(64) unsigned DEFAULT NULL COMMENT '更新者',
+        `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+        `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+        PRIMARY KEY (`id`)
+
+}
+
+CenterTable(product, "商品\n表示商家提供给用户的可供交易的物品"){
+        `id` bigint(64) unsigned NOT NULL COMMENT '主键',
+         `merchant_id` bigint(64) unsigned DEFAULT NULL COMMENT '商户id',
+         `desc` varchar(50) DEFAULT NULL COMMENT '商品描述',
+         `img`  varchar(255) DEFAULT NULL COMMENT '商品图片',
+         `title`  varchar(50) DEFAULT NULL COMMENT '商品名',
+         `price` double DEFAULT NULL,
+         `comment_id`  COMMENT '评论id',
+
+         `version` int(8) DEFAULT '0' COMMENT '版本',
+         `creator` bigint(64) unsigned DEFAULT NULL COMMENT '创建者',
+         `updator` bigint(64) unsigned DEFAULT NULL COMMENT '更新者',
+         `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+         `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+         PRIMARY KEY (`id`)
+}
+
+CenterTable(shop, "店铺\n陈列售卖商品的店家"){
+        `id` bigint(64) unsigned NOT NULL COMMENT '主键',
+        `id_number` varchar(32) DEFAULT '' COMMENT '营业执照',
+        `name` varchar(50) DEFAULT '' COMMENT '名称',
+        `address` varchar(256) DEFAULT '' COMMENT '地址',
+        `status` tinyint(4) DEFAULT NULL COMMENT '状态',
+        `phone` varchar(50) DEFAULT NULL,
+
+        `version` int(8) DEFAULT '0' COMMENT '版本',
+        `creator` bigint(64) unsigned DEFAULT NULL COMMENT '创建者',
+        `updator` bigint(64) unsigned DEFAULT NULL COMMENT '更新者',
+        `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+        `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+        PRIMARY KEY (`id`)
+
+}
+
+CenterTable(product_car, "购物车\n用于放置用户即将购买的商品"){
+        `id` bigint(64) unsigned NOT NULL COMMENT '主键',
+        `user_id` bigint(64) unsigned DEFAULT NULL COMMENT '用户id',
+        `merchant_id` bigint(64) unsigned DEFAULT NULL COMMENT '商户id',
+
+
+
+}
+
+CenterTable(order, "订单\n用户购买商品后向商家提供的记录购买过程、详细商品信息和货值的购物凭据。"){
+         `id` bigint(64) unsigned NOT NULL COMMENT '主键',
+         `sn` varchar(32) DEFAULT NULL COMMENT '订单编号',
+         `status` tinyint(4) DEFAULT '-1' COMMENT ' 0：创建，用户扫码后立即创建一张订单；如果创建即确认，此状态则作为保留状态；
+         1：订单已确认，用户确认下单；
+         10：已支付；
+         11：支付失败；
+         20：订单已完成，成功的订单完结状态。
+         21：订单失败完成，没有成功支付或其他原因而需要完结的订单；
+         22：订单已作废，订单创建后，用户在进行充电前主动取消，如果创建即确认，此状态则作为保留状态；
+
+         `user_id` bigint(64) unsigned DEFAULT NULL COMMENT '用户id',
+         `merchant_id` bigint(64) unsigned DEFAULT NULL COMMENT '商户id',
+         `product_id` bigint(64) unsigned DEFAULT NULL COMMENT '商品id',
+         `discount_money` decimal(10,2) DEFAULT '0.00' COMMENT '优惠金额',
+         `real_money` decimal(10,2) DEFAULT '0.00' COMMENT '实际消费金额',
+         `pay_money` decimal(10,2) DEFAULT '0.00' COMMENT '实际支付金额：实际消费金额-优惠金额',
+         `refund_money` decimal(10,2) DEFAULT '0.00' COMMENT '退款金额,
+         `remark` varchar(200) DEFAULT NULL COMMENT '订单处理备注',
+
+         `version` int(8) DEFAULT '0' COMMENT '版本',
+         `creator` bigint(64) unsigned DEFAULT NULL COMMENT '创建者',
+         `updator` bigint(64) unsigned DEFAULT NULL COMMENT '更新者',
+         `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+         `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+          PRIMARY KEY (`id`)
+
+}
+CenterTable(product_comment, "商品评价\n用户对商品的评价"){
+         `id` bigint(64) unsigned NOT NULL COMMENT '主键',
+         `user_id` bigint(64) unsigned DEFAULT NULL COMMENT '用户id',
+         `product_id` bigint(64) unsigned DEFAULT NULL COMMENT '商品id',
+         `comment` varchar(255) DEFAULT NULL COMMENT `评论`
+         `state` int DEFAULT NULL COMMENT `状态`
+
+         `version` int(8) DEFAULT '0' COMMENT '版本',
+         `creator` bigint(64) unsigned DEFAULT NULL COMMENT '创建者',
+         `updator` bigint(64) unsigned DEFAULT NULL COMMENT '更新者',
+         `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+         `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+         PRIMARY KEY (`id`)
+}
+
+
+CenterTable(product_info,"商品顺序\n记录商品顺序"){
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+        `product_id` varchar(255) NOT NULL COMMENT '商品ID',
+        `product_title` varchar(255) NOT NULL COMMENT '商品名称',
+        `img_url` varchar(255) NOT NULL COMMENT '商品图片地址',
+        `prodtct_price` varchar(255) NOT NULL COMMENT '商品标价',
+        PRIMARY KEY (`id`)
+}
+CenterTable(classification, "商品分类\n商品的分类"){
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '，
+          0：家用电器类；
+          10：家庭五金、家庭用品类；
+          20：卧具、家具类。
+          30：体育健身用品类；
+          40：摄影器材、钟表、眼镜类；
+          50：妇女儿童用品类；
+          60：玩具类
+          70：服装内衣类；
+          80：食品类；',
+        `cname` varchar(255) DEFAULT NULL,
+        `parent_id` int(11) DEFAULT NULL,
+        `type` int(11) DEFAULT NULL,
+        PRIMARY KEY (`id`)
+}
+user --{ product: 购买
+shop --{ product : 售卖
+product_car --{ product : 包含
+order --{ product : 包含
+user --{ order: 下单
+shop --{ order : 归属
+product --{ product_comment : 包含
+user --{ product_comment : 创建
+user --{ product_car : 包含
+
+
+
+
+@enduml
