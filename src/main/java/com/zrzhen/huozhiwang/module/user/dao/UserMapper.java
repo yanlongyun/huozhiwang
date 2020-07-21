@@ -7,13 +7,23 @@ public interface UserMapper {
 
     @Select({
             "select",
-            "id, name, email",
+            "count(*)",
             "from `user`",
-            "where email = #{email,jdbcType=VARCHAR}",
+            "where phone = #{phone,jdbcType=VARCHAR}",
             "and `password` = #{password,jdbcType=VARCHAR}",
             "limit 1"
     })
-    User oneByEmailAndPwd(@Param("email") String email, @Param("password") String password);
+    int checkByPhoneAndPwd(@Param("phone") String phone, @Param("password") String password);
+    @Select({
+            "select",
+            "id, name, email",
+            "from `user`",
+            "where phone = #{phone,jdbcType=VARCHAR}",
+            "and `password` = #{password,jdbcType=VARCHAR}",
+            "limit 1"
+    })
+    User selectByPhoneAndPwd(@Param("phone") String phone, @Param("password") String password);
+
     @Select({
             "select",
             "count(1)",

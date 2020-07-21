@@ -5,6 +5,7 @@ public enum SysResultCode implements ResultCode {
 
     /*设置不同情况下的返回值和信息*/
     SUCCESS(1, "success"),
+
     FAIL(0, "fail"),
 
 

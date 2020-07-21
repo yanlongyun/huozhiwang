@@ -1,26 +1,29 @@
-package com.zrzhen.huozhiwang.util;
+package com.huiyan.bohui.util;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
  * @author chenanlian
  */
+@Slf4j
 public class JsonUtil {
 
-    private static Logger log = LoggerFactory.getLogger(JsonUtil.class);
+    static volatile ObjectMapper objectMapper;
 
-    private static volatile ObjectMapper objectMapper;
+    private static final ObjectMapper SORTED_MAPPER = new ObjectMapper();
 
+    static {
+        SORTED_MAPPER.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
+    }
 
     /**
      * 获取单例ObjectMapper
@@ -32,10 +35,6 @@ public class JsonUtil {
             synchronized (JsonUtil.class) {
                 if (objectMapper == null) {
                     objectMapper = new ObjectMapper();
-                    objectMapper.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
-                    objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
-//                    objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-//                    objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
                 }
             }
         }
@@ -48,62 +47,14 @@ public class JsonUtil {
      * @param object
      * @return
      */
-    public static String entity2Json(Object object) {
+    public static String obj2Json(Object object) {
         try {
             return getObjectMapper().writeValueAsString(object);
         } catch (JsonProcessingException e) {
-            log.error(e.getMessage(), e);
+            e.printStackTrace();
             return null;
         }
     }
-
-    /**
-     * 将json形式字符串转换为java实体类
-     */
-    public static <T> T str2Entity(String jsonStr, Class<T> clazz) {
-        T readValue = null;
-        try {
-            readValue = getObjectMapper().readValue(jsonStr, clazz);
-        } catch (JsonParseException e) {
-            log.error(e.getMessage(), e);
-        } catch (JsonMappingException e) {
-            log.error(e.getMessage(), e);
-        } catch (IOException e) {
-            log.error(e.getMessage(), e);
-        }
-        return readValue;
-    }
-
-    /**
-     * 获取泛型的Collection Type
-     *
-     * @param collectionClass 泛型的Collection
-     * @param elementClasses  元素类
-     * @return JavaType Java类型
-     * @since 1.0
-     */
-    public static JavaType getCollectionType(Class<?> collectionClass, Class<?>... elementClasses) {
-        return getObjectMapper().getTypeFactory().constructParametricType(collectionClass, elementClasses);
-    }
-
-    /**
-     * json字符串转集合类
-     *
-     * @param jsonString
-     * @param collectionClass
-     * @param elementClasses
-     * @return
-     */
-    public static Object str2Collection(String jsonString, Class<?> collectionClass, Class<?>... elementClasses) {
-        JavaType javaType = getCollectionType(collectionClass, elementClasses);
-        try {
-            return getObjectMapper().readValue(jsonString, javaType);
-        } catch (IOException e) {
-            log.error(e.getMessage(), e);
-            return null;
-        }
-    }
-
 
     /**
      * jsonNode 转字符串并按字母排序
@@ -115,10 +66,10 @@ public class JsonUtil {
         Object obj;
         String json = null;
         try {
-            obj = objectMapper.treeToValue(node, Object.class);
-            json = objectMapper.writeValueAsString(obj);
+            obj = SORTED_MAPPER.treeToValue(node, Object.class);
+            json = SORTED_MAPPER.writeValueAsString(obj);
         } catch (JsonProcessingException e) {
-            log.error(e.getMessage(), e);
+            e.printStackTrace();
         }
         return json;
     }
@@ -133,19 +84,10 @@ public class JsonUtil {
         try {
             return getObjectMapper().readTree(str);
         } catch (IOException e) {
-            log.error(e.getMessage(), e);
+            e.printStackTrace();
             return null;
         }
 
-    }
-
-    public static JsonNode map2JsonNode(Map<String, String> map) {
-
-        ObjectNode jsonNodes = getObjectMapper().createObjectNode();
-        for (Map.Entry<String, String> entry : map.entrySet()) {
-            jsonNodes.put(entry.getKey(), entry.getValue());
-        }
-        return jsonNodes;
     }
 
     /**
@@ -220,8 +162,7 @@ public class JsonUtil {
 
     /**
      * 将数据源jsonNode 按模板jsonNode输出sql语句列表
-     *
-     * @param data     数据来源
+     * @param data 数据来源
      * @param template json 模板
      * @return sql 语句列表
      */
@@ -247,7 +188,7 @@ public class JsonUtil {
                 String fieldPath = tableNode.get(fieldName).asText();
                 JsonNode fileValue = findValueByPath(data, fieldPath);
                 /*去除没有值或取值错误的节点*/
-                if (null != fileValue && !fileValue.equals("")) {
+                if (null != fileValue && !fileValue.equals("")){
                     sb.append(fieldName);
                     sb.append(",");
                     sbv.append(fileValue);
@@ -268,7 +209,6 @@ public class JsonUtil {
 
     /**
      * 根据路径获取值
-     *
      * @param jsonNode
      * @param valuePath 节点路径
      * @return
@@ -309,22 +249,7 @@ public class JsonUtil {
         return objectNode;
     }
 
-    /**
-     * 获取字符串值
-     *
-     * @param jsonNode
-     * @param key
-     * @return
-     */
-    public static String getString(JsonNode jsonNode, String key) {
-        JsonNode value = jsonNode.get(key);
-        if (value == null) {
-            return null;
-        } else {
-            return value.asText().trim();
-        }
-    }
+
 
 
 }
-

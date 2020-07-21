@@ -5,7 +5,6 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.math.BigDecimal;
 
 /**
  * 用户
