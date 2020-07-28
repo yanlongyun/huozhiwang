@@ -1,4 +1,4 @@
-package com.huiyan.bohui.util;
+package com.zrzhen.huozhiwang.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;

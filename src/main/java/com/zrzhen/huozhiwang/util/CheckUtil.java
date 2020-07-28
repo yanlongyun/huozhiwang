@@ -2,7 +2,7 @@ package com.zrzhen.huozhiwang.util;
 
 //import com.huiyan.bohui.result.Constant;
 
-import com.zrzhen.huozhiwang.result.Constant;
+import com.zrzhen.huozhiwang.util.Constant;
 
 public class CheckUtil {
 

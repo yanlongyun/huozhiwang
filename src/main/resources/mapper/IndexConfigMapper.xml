@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zrzhen.huozhiwang.dao.IndexConfigMapper">
+    <resultMap id="BaseResultMap" type="com.zrzhen.huozhiwang.entity.IndexConfig">
+        <id column="config_id" jdbcType="BIGINT" property="configId"/>
+        <result column="config_name" jdbcType="VARCHAR" property="configName"/>
+        <result column="config_type" jdbcType="TINYINT" property="configType"/>
+        <result column="goods_id" jdbcType="BIGINT" property="goodsId"/>
+        <result column="redirect_url" jdbcType="VARCHAR" property="redirectUrl"/>
+        <result column="config_rank" jdbcType="INTEGER" property="configRank"/>
+        <result column="is_deleted" jdbcType="TINYINT" property="isDeleted"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="create_user" jdbcType="INTEGER" property="createUser"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="update_user" jdbcType="INTEGER" property="updateUser"/>
+    </resultMap>
+    <!--定义需要获取l的字段。相当于*，但用*号的话会降低查询效率，因为后期数据库的字段会不断增加-->
+    <sql id="Base_Column_List">
+    config_id, config_name, config_type, goods_id, redirect_url, config_rank, is_deleted,
+    create_time, create_user, update_time, update_user
+    </sql>
+
+    <!--这是首页通过类型和数量获取对应的数据。有三种类型数据存储在首页配置数据库中， -->
+    <!--1-搜索框热搜 2-搜索下拉框热搜 3-(首页)热销商品 4-(首页)新品上线 5-(首页)为你推荐-->
+    <select id="findIndexConfigsByTypeAndNum" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from index_config
+        where config_type = #{configType} and is_deleted = 0
+        order by config_rank desc
+        limit #{number}
+    </select>
+
+
+
+</mapper>
