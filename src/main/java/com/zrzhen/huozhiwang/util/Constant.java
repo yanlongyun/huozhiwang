@@ -16,7 +16,6 @@ public class Constant {
 
     @Value("${Constant.domain}")
     public void setDomain(String domain) {
-
         Constant.domain = domain;
     }
 }

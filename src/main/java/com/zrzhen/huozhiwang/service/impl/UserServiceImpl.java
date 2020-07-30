@@ -1,86 +1,89 @@
 package com.zrzhen.huozhiwang.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
-import com.zrzhen.huozhiwang.dao.UserMapper;
-import com.zrzhen.huozhiwang.entity.User;
+import com.zrzhen.huozhiwang.common.Constants;
+import com.zrzhen.huozhiwang.common.ServiceResultEnum;
+import com.zrzhen.huozhiwang.controller.vo.MallUserVO;
+import com.zrzhen.huozhiwang.dao.MallUserMapper;
+import com.zrzhen.huozhiwang.entity.MallUser;
 import com.zrzhen.huozhiwang.service.UserService;
-import com.zrzhen.huozhiwang.util.SessionMapUtil;
+import com.zrzhen.huozhiwang.util.BeanUtil;
+import com.zrzhen.huozhiwang.util.CharacterUtils;
+import com.zrzhen.huozhiwang.util.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+/**
+ * @author: 慧燕
+ * @date: 2020/7/30 16:05
+ * @copyright yanlongyun2020
+ */
 @Service
 public class UserServiceImpl implements UserService {
-
     @Autowired
-    UserMapper userMapper;
-    @Autowired
-    HttpServletRequest request;
-    @Autowired
-    HttpServletResponse response;
+    MallUserMapper mallUserDaoMapper;
 
     @Override
-    public String register(JSONObject params) {
-        User user = new User();
-        String phone = params.getString("phone");
-        String password = params.getString("password");
-        user.setPhone(phone);
-        user.setPassword(password);
-        int i = userMapper.insert(user);
-        if (i > 0) {
-            return "注册成功";
+    public String register(String loginName, String password) {
+        /*先判断是否有该用户，如果有，则返回已注册*/
+        if(mallUserDaoMapper.selectByLoginName(loginName) != null){
+            return ServiceResultEnum.SAME_LOGIN_NAME_EXIST.getResult();
         }
-        return "注册失败";
+        MallUser user = new MallUser();
+        user.setLoginName(loginName);
+        user.setNickName(loginName);
+        user.setPasswordMd5(MD5Util.MD5Encode(password,"UTF-8"));
+        if(mallUserDaoMapper.insertSelective(user) > 0){
+            return ServiceResultEnum.SUCCESS.getResult();
+        }
+        return ServiceResultEnum.DB_ERROR.getResult();
     }
 
     @Override
-    public String checkRegister(JSONObject params) {
-        String phone = params.getString("phone");
-        if (userMapper.oneByPhone(phone) > 0) {
-            return "该手机号已注册,请重新输入";
-        } else {
-            return "true";
-        }
-    }
-
-    @Override
-    public String login(JSONObject params) {
-        /*获取，如果没有的话就生成一个*/
-        String sessionid = SessionMapUtil.getSession(request, response);
-        /*获取sessionid的值*/
-        Long value = SessionMapUtil.getValue(sessionid);
-        if (value != null) {
-            return "已经登录";
-        }
-        String phone = params.getString("phone");
-        String password = params.getString("password");
-        User user = userMapper.selectByPhoneAndPwd(phone, password);
-        if (user == null) {
-            //  检查手机号看用户是否存在，不存在提醒用户注册
-            if (userMapper.oneByPhone(phone) > 0) {
-                return "密码错误，请重新输入";
-            } else {
-                return "该手机号未注册，请注册后登录";
+    public String login(String loginName, String password, HttpSession httpSession) {
+        /*1.查询用户是否存在，不存在返回对应信息*/
+        String passwordMd5 = MD5Util.MD5Encode(password,"UTF-8");
+        MallUser user = mallUserDaoMapper.selectByLoginNameAndPassword(loginName,passwordMd5);
+        if(user != null && httpSession != null ){
+            /*锁定标识字段，如果为0则未锁定，1锁定*/
+            if (user.getLockedFlag() == 1) {
+                /*锁定的禁止登陆*/
+                return ServiceResultEnum.LOGIN_USER_LOCKED.getResult();
             }
-        } else {
-            SessionMapUtil.putValue(sessionid, user.getId());
-            return "登录成功";
-            /*生成sessionid*/
-        }
+            //昵称太长 影响页面展示，所以只显示一部分
+            if (user.getNickName() != null && user.getNickName().length() > 7) {
+                String tempNickName = user.getNickName().substring(0, 7) + "..";
+                user.setNickName(tempNickName);
+            }
+            /*把用户信息封装为MallUserVo对象*/
+            MallUserVO mallUserVo = new MallUserVO();
+            BeanUtil.copyProperties(user, mallUserVo);
+            /*把该对象给session,这里因为可以使用拦截器设置购物车数量，所以不在这里设置。*/
+            httpSession.setAttribute(Constants.MALL_USER_SESSION_KEY, mallUserVo);
+            /*返回成功信息*/
+            return ServiceResultEnum.SUCCESS.getResult();
+         }
+        return ServiceResultEnum.LOGIN_ERROR.getResult();
     }
 
     @Override
-    public String checkLogin(JSONObject params) {
-        /*获取，如果没有的话就生成一个*/
-        String sessionid = SessionMapUtil.getSession(request, response);
-        /*获取sessionid的值*/
-        Long value = SessionMapUtil.getValue(sessionid);
-        if (value == null) {
-            return "没有登录";
+    public String updateInfo(MallUser mallUser,HttpSession httpSession) {
+        /*通过userID来查询user*/
+        MallUser user = mallUserDaoMapper.selectByPrimaryKey(mallUser.getUserId());
+        if(user != null){
+            user.setNickName(CharacterUtils.cleanString(mallUser.getNickName()));
+            user.setIntroduceSign(CharacterUtils.cleanString(mallUser.getIntroduceSign()));
+            user.setAddress(CharacterUtils.cleanString(mallUser.getAddress()));
+            if(mallUserDaoMapper.updateByPrimaryKeySelective(user) > 0){
+                /*更新session中的内容*/
+                MallUserVO mallUserVO = new MallUserVO();
+                BeanUtil.copyProperties(user,mallUserVO);
+                httpSession.setAttribute(Constants.MALL_USER_SESSION_KEY, mallUserVO);
+                return ServiceResultEnum.SUCCESS.getResult();
+            }
+            return ServiceResultEnum.UPDATE_USER_FAIL.getResult();
         }
-        return "已经登录";
+        return ServiceResultEnum.USER_NO_EXIST.getResult();
     }
 }
-

@@ -73,13 +73,18 @@
             return false;
         }
         var verifyCode = $("#verifyCode").val();
-        if (!validLength(verifyCode, 7)) {
+        if (!validLength(verifyCode, 5)) {
             swal('请输入正确的验证码', {
                 icon: "error",
             });
             return false;
         }
-        //验证
+        //将form表单序列化，把form表单的值序列化成一个字符串，如username=admin&password=admin123
+        //注意：必须存在name属性，后台取值得时候和name属性保持一致。这是json字符串
+        /*$("#form1").serializeObject()  把form表单中内容序列化成json对象*/
+        /*JSON.parse()：把字符串解析成json对象*/
+        /*JSON.stringify()：把json对象解析成字符串*/
+        /*$("#form1").serializeArray()：把表单中内容序列化为数组对象*/
         var params = $("#loginForm").serialize();
         var url = '/login';
         $.ajax({

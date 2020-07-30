@@ -30,7 +30,7 @@ public class CommonController {
         properties.put("kaptcha.textproducer.font.color","27,174,174");
         properties.put("kaptcha.noise.impl","com.google.code.kaptcha.impl.NoNoise");
 //        properties.put("kaptcha.noise.color","20,33,42");
-        properties.put("kaptcha.text.producer.font.size","10");
+        properties.put("kaptcha.textproducer.font.size","30");
         properties.put("kaptcha.image.height","40");
         properties.put("kaptcha.image.width","110");
         properties.put("kaptcha.session.key", Constants.MALL_VERIFY_CODE_KEY);
