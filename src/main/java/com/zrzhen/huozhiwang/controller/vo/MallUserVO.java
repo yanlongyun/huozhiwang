@@ -6,7 +6,6 @@ package com.zrzhen.huozhiwang.controller.vo;
  * @copyright yanlongyun2020
  */
 public class MallUserVO {
-
     /*保存用户基本信息*/
     private Long userId;
     private String nickName;
