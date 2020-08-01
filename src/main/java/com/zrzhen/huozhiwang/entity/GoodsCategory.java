@@ -9,7 +9,7 @@ public class GoodsCategory {
 //  分类ID
     private Long categoryId;
 //  分类级别
-    private Byte categoryLevel;
+    private int categoryLevel;
 //  父类ID
     private Long parentId;
 //  名称
@@ -37,11 +37,11 @@ public class GoodsCategory {
         this.categoryId = categoryId;
     }
 
-    public Byte getCategoryLevel() {
+    public int getCategoryLevel() {
         return categoryLevel;
     }
 
-    public void setCategoryLevel(Byte categoryLevel) {
+    public void setCategoryLevel(int categoryLevel) {
         this.categoryLevel = categoryLevel;
     }
 

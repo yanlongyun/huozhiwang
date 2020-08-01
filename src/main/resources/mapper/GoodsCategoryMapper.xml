@@ -33,4 +33,11 @@
             limit #{number}
         </if>
     </select>
+
+    <select id="selectCategoryById" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from goods_category
+        where category_id = #{categoryId}
+    </select>
 </mapper>

@@ -1,5 +1,7 @@
 package com.zrzhen.huozhiwang.controller.vo;
 
+import com.zrzhen.huozhiwang.entity.GoodsCategory;
+
 import java.util.List;
 
 /**
@@ -8,18 +10,50 @@ import java.util.List;
  * @copyright yanlongyun2020
  */
 public class SearchPageCategoryVO {
-    /**
-    *三级分类信息
-    * @param:
-    * @createDate: 2020/7/31 20:08
-    * @return:
-    */
-    private GoodsDetailVO goodsDetailVO;
-    /**
-    *三级分类查出上一级信息。
-    * @param:
-    * @createDate: 2020/7/31 20:09
-    * @return:
-    */
-    private List<SecondLevelCategoryVO> secondLevelCategoryVOS;
+    private String firstLevelCategoryName;
+    private String secondLevelCategoryName;
+    private String thirdLevelCategoryName;
+    private List<GoodsCategory> thirdLevelCategoryList;
+    private String currentCategoryName;
+
+    public String getCurrentCategoryName() {
+        return currentCategoryName;
+    }
+
+    public void setCurrentCategoryName(String currentCategoryName) {
+        this.currentCategoryName = currentCategoryName;
+    }
+
+    public String getFirstLevelCategoryName() {
+        return firstLevelCategoryName;
+    }
+
+    public void setFirstLevelCategoryName(String firstLevelCategoryName) {
+        this.firstLevelCategoryName = firstLevelCategoryName;
+    }
+
+    public String getSecondLevelCategoryName() {
+        return secondLevelCategoryName;
+    }
+
+    public void setSecondLevelCategoryName(String secondLevelCategoryName) {
+        this.secondLevelCategoryName = secondLevelCategoryName;
+    }
+
+    public String getThirdLevelCategoryName() {
+        return thirdLevelCategoryName;
+    }
+
+    public void setThirdLevelCategoryName(String thirdLevelCategoryName) {
+        this.thirdLevelCategoryName = thirdLevelCategoryName;
+    }
+
+    public List<GoodsCategory> getThirdLevelCategoryList() {
+        return thirdLevelCategoryList;
+    }
+
+    public void setThirdLevelCategoryList(List<GoodsCategory> thirdLevelCategoryList) {
+        this.thirdLevelCategoryList = thirdLevelCategoryList;
+    }
 }
+

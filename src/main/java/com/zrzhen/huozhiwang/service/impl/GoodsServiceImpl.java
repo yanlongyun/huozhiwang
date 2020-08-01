@@ -17,6 +17,7 @@ import java.util.List;
 public class GoodsServiceImpl implements GoodsService {
     @Autowired
     GoodsMapper goodsMapper;
+
     @Override
     public GoodsInfo getGoodDetail(Long goodsId) {
         return goodsMapper.selectGoodInfoById(goodsId);

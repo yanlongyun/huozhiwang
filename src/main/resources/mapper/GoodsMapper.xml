@@ -22,8 +22,7 @@
         <result column="goods_detail_content" jdbcType="LONGVARCHAR" property="goodsDetailContent"/>
     </resultMap>-->
     <sql id="Base_Column_List">
-    goods_id, goods_name, goods_intro,goods_category_id, goods_cover_img, goods_carousel, original_price,
-    selling_price, stock_num, tag, goods_sell_status, create_user, create_time, update_user,
+    goods_id,goods_name,goods_intro,goods_category_id,goods_cover_img,goods_carousel,original_price,selling_price,stock_num,tag,goods_sell_status,create_user,create_time,update_user,
     update_time
   </sql>
     <sql id="Blob_Column_List">
@@ -45,14 +44,60 @@
         );
     </select>
     <!--根据id查询商品详情-->
-    <select id="selectGoodInfoById" resultMap="BaseResultMap" resultType="com.zrzhen.huozhiwang.entity.GoodsInfo">
+    <select id="selectGoodInfoById" resultMap="BaseResultMap" parameterType="Map">
         select
         <include refid="Base_Column_List"/>
         from goods_info
         where goods_id = #{id}
     </select>
 
-    <select id="selectGoodsInfoByCategoryId" resultMap="BaseResultMap" resultType="">
 
+    <select id="getTotalPage" parameterType="Map" resultType="int">
+        select count(*)
+        from goods_info
+        <where>
+            <if test="keyword != null and keyword != '' ">
+                and (goods_name like CONCAT('%',#{keyword),'%') or (goods_intro like CONCAT('%',#{keyword),'%')
+            </if>
+            <if test="goodsCategoryId != null and goodsCategoryId != ''">
+                and goods_category_id = #{goodsCategoryId}
+            </if>
+            <if test="goodsSellStatus != null">
+                and goods_sell_status = #{goodsSellStatus}
+            </if>
+        </where>
+    </select>
+    <select id="getPageResult" resultMap="BaseResultMap" parameterType="Map">
+        select <include refid="Base_Column_List"/>
+        from goods_info
+        <where>
+        <if test="keyword != null and keyword != '' ">
+            and (goods_name like CONCAT('%',#{keyword),'%') or (goods_intro like CONCAT('%',#{keyword),'%')
+        </if>
+        <if test="goodsCategoryId!= null and goodsCategoryId != ''">
+            and goods_category_id = #{goodsCategoryId}
+        </if>
+            <if test="goodsSellStatus != null">
+                and goods_sell_status = #{goodsSellStatus}
+            </if>
+        </where>
+        <if test="orderBy != null and orderBy !=''">
+            <choose>
+                <when test="orderBy == 'new'">
+                    order by goods_id desc
+                </when>
+                <when test="orderBy == 'price'">
+                /*价格由高到低*/
+                    order by selling_price asc
+                </when>
+                <otherwise>
+                /*默认配置*/
+                    order by stock_num desc
+                </otherwise>
+            </choose>
+        </if>
+        <if test="start != null and limit != null">
+            limit #{start},#{limit}
+        </if>
     </select>
 </mapper>

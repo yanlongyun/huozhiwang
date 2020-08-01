@@ -29,12 +29,12 @@ public class MallWebMvcConfigurer implements WebMvcConfigurer {
                 .excludePathPatterns("/admin/**")
                 .excludePathPatterns("/register")
                 .excludePathPatterns("/logout");
-        registry.addInterceptor(mallLoginInterceptor)
-                .excludePathPatterns("/login")
+      //  registry.addInterceptor(mallLoginInterceptor)
+/*                .excludePathPatterns("/login")
                 .excludePathPatterns("/register")
                 .excludePathPatterns("/logout")
-                .excludePathPatterns("/admin/**")
-                .addPathPatterns("/goods/detail/**")
+                .excludePathPatterns("/admin/**");*/
+     /*           .addPathPatterns("/goods/detail/**")
                 .addPathPatterns("/shop-cart")
                 .addPathPatterns("/shop-cart/**")
                 .addPathPatterns("/saveOrder")
@@ -43,7 +43,7 @@ public class MallWebMvcConfigurer implements WebMvcConfigurer {
                 .addPathPatterns("/personal")
                 .addPathPatterns("/personal/updateInfo")
                 .addPathPatterns("/selectPayType")
-                .addPathPatterns("/payPage");
+                .addPathPatterns("/payPage");*/
     }
 
 
