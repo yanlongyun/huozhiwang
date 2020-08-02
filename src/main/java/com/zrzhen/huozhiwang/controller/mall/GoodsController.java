@@ -113,8 +113,13 @@ public class GoodsController {
         /*封装分页数据用于查询*/
         params.put("limit",Constants.SEARCH_CATEGORY_NUMBER);
         PageUtil pageUtil = new PageUtil(params);
+
         SearchPageShowVO searchPageShowVO = searchService.getPageShow(pageUtil);
-        request.setAttribute("pageResult",searchPageShowVO);
-        return "/mall/search";
+        if(searchPageShowVO != null){
+            request.setAttribute("pageResult",searchPageShowVO);
+        }else {
+            request.setAttribute("pageResult",new SearchPageShowVO());
+        }
+        return "mall/search";
     }
 }

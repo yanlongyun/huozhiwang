@@ -57,7 +57,7 @@
         from goods_info
         <where>
             <if test="keyword != null and keyword != '' ">
-                and (goods_name like CONCAT('%',#{keyword),'%') or (goods_intro like CONCAT('%',#{keyword),'%')
+                and (goods_name like CONCAT('%',#{keyword},'%')) or (goods_intro like CONCAT('%',#{keyword},'%'))
             </if>
             <if test="goodsCategoryId != null and goodsCategoryId != ''">
                 and goods_category_id = #{goodsCategoryId}
@@ -72,7 +72,7 @@
         from goods_info
         <where>
         <if test="keyword != null and keyword != '' ">
-            and (goods_name like CONCAT('%',#{keyword),'%') or (goods_intro like CONCAT('%',#{keyword),'%')
+            and (goods_name like CONCAT('%',#{keyword},'%')) or (goods_intro like CONCAT('%',#{keyword},'%'))
         </if>
         <if test="goodsCategoryId!= null and goodsCategoryId != ''">
             and goods_category_id = #{goodsCategoryId}

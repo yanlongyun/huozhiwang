@@ -50,12 +50,12 @@ public class SearchPageShowVO {
         this.list = list;
     }
 
-    public SearchPageShowVO(List<SearchGoodsVO> searchGoodsVOS, int total, int currentPage, int limit){
-        this.limit=limit;
-        this.currPage = currentPage;
+    public SearchPageShowVO(List<SearchGoodsVO> searchGoodsVOS,int currPage,int totalPage, int limit){
         this.list = searchGoodsVOS;
-        this.totalPage=total;
+        this.currPage = currPage;
+        this.totalPage=totalPage;
+        this.limit=limit;
+
     }
-
-
+    public SearchPageShowVO(){};
 }

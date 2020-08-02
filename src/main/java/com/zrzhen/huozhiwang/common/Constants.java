@@ -8,7 +8,7 @@ public class Constants {
 //    首页一级分类胡最大数量
     public final static int INDEX_CATEGORY_NUMBER = 10;
 //    搜索页一级分类的最大数量
-    public final static int SEARCH_CATEGORY_NUMBER = 8;
+    public final static int SEARCH_CATEGORY_NUMBER = 10;
 //    热卖商品数量
     public final static int INDEX_GOODS_HOT_NUMBER = 4;
 //    首页新品数量

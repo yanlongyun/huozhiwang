@@ -41,11 +41,11 @@ public class SearchServiceImpl implements SearchService {
         /*获取三级分类的名字*/
         String thirdLevelCategoryName = goodsCategory.getCategoryName();
         /*创建一个list，保存ID*/
-        List<Long> list= new ArrayList<>();
-        list.add(Long.valueOf(param.get("goodsCategoryId")+""));
+        List<Long> list = new ArrayList<>();
+        list.add(Long.valueOf(param.get("goodsCategoryId") + ""));
         List<GoodsCategory> goodsCategories = goodsCategoryMapper.selectByLevelAndParentIdsAndNumber(list, CategoryLevelEnum.LEVEL_THREE.getLevel(), Constants.SEARCH_CATEGORY_NUMBER);
         /*封装数据，返回给前端*/
-        SearchPageCategoryVO searchPageCategoryVO= new SearchPageCategoryVO();
+        SearchPageCategoryVO searchPageCategoryVO = new SearchPageCategoryVO();
         searchPageCategoryVO.setThirdLevelCategoryList(goodsCategories);
         searchPageCategoryVO.setSecondLevelCategoryName(secondLevelCategoryName);
         searchPageCategoryVO.setCurrentCategoryName(goodsCategory.getCategoryName());
@@ -56,7 +56,7 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public SearchPageShowVO getPageShow(PageUtil param) {
         /*根据封装好的信息进行查询*/
-        List<GoodsInfo> goodsList=goodsMapper.getPageResult(param);
+        List<GoodsInfo> goodsList = goodsMapper.getPageResult(param);
         int count = goodsMapper.getTotalPage(param);
         List<SearchGoodsVO> searchGoodsVOS = new ArrayList<>();
         if (!CollectionUtils.isEmpty(goodsList)) {
@@ -74,8 +74,11 @@ public class SearchServiceImpl implements SearchService {
                     searchGoodsVO.setGoodsIntro(goodsIntro);
                 }
             }
+            int totalPage = count / param.getLimit();
+            SearchPageShowVO pageResult = new SearchPageShowVO(searchGoodsVOS, param.getPage(), totalPage, param.getLimit());
+            return pageResult;
         }
-        SearchPageShowVO pageResult = new SearchPageShowVO(searchGoodsVOS, count, param.getLimit(), param.getPage());
-        return pageResult;
+        return null;
     }
 }
+
