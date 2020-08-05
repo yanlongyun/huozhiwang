@@ -1,5 +1,6 @@
 package com.zrzhen.huozhiwang.service;
 
+import com.zrzhen.huozhiwang.controller.vo.MallUserVO;
 import com.zrzhen.huozhiwang.entity.MallUser;
 import com.zrzhen.huozhiwang.util.Result;
 
@@ -36,6 +37,6 @@ public interface UserService {
     * @createDate: 2020/7/30 23:00
     * @return: java.lang.String
     */
-    String updateInfo(MallUser mallUser,HttpSession httpSession);
+    String updateInfo(MallUser mallUser, HttpSession httpSession);
 
 }

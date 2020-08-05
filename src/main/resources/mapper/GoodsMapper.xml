@@ -100,4 +100,14 @@
             limit #{start},#{limit}
         </if>
     </select>
+    
+    <!--把商品列表插入到数据库中-->
+    <update id="updateCount">
+        update goods_info
+        <set>
+                stock_num = #{stockNum}
+        </set>
+        where
+        goods_id = #{goodsId}
+    </update>
 </mapper>

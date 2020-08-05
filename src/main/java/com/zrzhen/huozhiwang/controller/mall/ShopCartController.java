@@ -49,7 +49,7 @@ public class ShopCartController {
             request.setAttribute("priceTotal",priceTotal);
             request.setAttribute("itemsTotal",itemsTotal);
             return "/mall/cart";
-        }
+     }
 
 
 
@@ -85,5 +85,20 @@ public class ShopCartController {
         }
     }
 
+    /*跳转页面*/
+    @GetMapping("/shop-cart/settle")
+    public String orderSettlePage(HttpSession httpSession){
+        MallUserVO mallUserVO = (MallUserVO) httpSession.getAttribute(Constants.MALL_USER_SESSION_KEY);
+        Long userId = mallUserVO.getUserId();
+        List<ShopCartShowVO> shopCartShowVO = shopCartService.getCart(userId);
+        request.setAttribute("myShoppingCartItems",shopCartShowVO);
+        /*计算商品金额*/
+        int priceTotal = 0;
+        for(ShopCartShowVO item:shopCartShowVO){
+            priceTotal += item.getGoodsCount()*item.getSellingPrice();
+        }
+        request.setAttribute("priceTotal",priceTotal);
+        return "/mall/order-settle";
+    }
 }
 

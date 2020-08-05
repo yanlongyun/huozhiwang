@@ -2,6 +2,7 @@ package com.zrzhen.huozhiwang.dao;
 
 import com.zrzhen.huozhiwang.entity.GoodsInfo;
 import com.zrzhen.huozhiwang.util.PageUtil;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Map;
@@ -18,4 +19,8 @@ public interface GoodsMapper {
     int getTotalPage(PageUtil param);
 
     List<GoodsInfo> getPageResult(PageUtil param);
+
+
+    /*更新库存*/
+    int updateCount(@RequestParam("goodsId") Long goodsId, @RequestParam("stockNum") int stockNum);
 }

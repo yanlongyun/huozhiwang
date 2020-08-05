@@ -27,14 +27,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public String register(String loginName, String password) {
         /*先判断是否有该用户，如果有，则返回已注册*/
-        if(mallUserDaoMapper.selectByLoginName(loginName) != null){
+        if (mallUserDaoMapper.selectByLoginName(loginName) != null) {
             return ServiceResultEnum.SAME_LOGIN_NAME_EXIST.getResult();
         }
         MallUser user = new MallUser();
         user.setLoginName(loginName);
         user.setNickName(loginName);
-        user.setPasswordMd5(MD5Util.MD5Encode(password,"UTF-8"));
-        if(mallUserDaoMapper.insertSelective(user) > 0){
+        user.setPasswordMd5(MD5Util.MD5Encode(password, "UTF-8"));
+        if (mallUserDaoMapper.insertSelective(user) > 0) {
             return ServiceResultEnum.SUCCESS.getResult();
         }
         return ServiceResultEnum.DB_ERROR.getResult();
@@ -43,9 +43,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public String login(String loginName, String password, HttpSession httpSession) {
         /*1.查询用户是否存在，不存在返回对应信息*/
-        String passwordMd5 = MD5Util.MD5Encode(password,"UTF-8");
-        MallUser user = mallUserDaoMapper.selectByLoginNameAndPassword(loginName,passwordMd5);
-        if(user != null && httpSession != null ){
+        String passwordMd5 = MD5Util.MD5Encode(password, "UTF-8");
+        MallUser user = mallUserDaoMapper.selectByLoginNameAndPassword(loginName, passwordMd5);
+        if (user != null && httpSession != null) {
             /*锁定标识字段，如果为0则未锁定，1锁定*/
             if (user.getLockedFlag() == 1) {
                 /*锁定的禁止登陆*/
@@ -63,22 +63,25 @@ public class UserServiceImpl implements UserService {
             httpSession.setAttribute(Constants.MALL_USER_SESSION_KEY, mallUserVo);
             /*返回成功信息*/
             return ServiceResultEnum.SUCCESS.getResult();
-         }
+        }
         return ServiceResultEnum.LOGIN_ERROR.getResult();
     }
 
     @Override
-    public String updateInfo(MallUser mallUser,HttpSession httpSession) {
-        /*通过userID来查询user*/
+    public String updateInfo(MallUser mallUser, HttpSession httpSession) {
+        /*通过userID来查询user是否存在*/
         MallUser user = mallUserDaoMapper.selectByPrimaryKey(mallUser.getUserId());
-        if(user != null){
-            user.setNickName(CharacterUtils.cleanString(mallUser.getNickName()));
-            user.setIntroduceSign(CharacterUtils.cleanString(mallUser.getIntroduceSign()));
-            user.setAddress(CharacterUtils.cleanString(mallUser.getAddress()));
-            if(mallUserDaoMapper.updateByPrimaryKeySelective(user) > 0){
+        if (user != null) {
+            if (mallUserDaoMapper.updateByPrimaryKeySelective(mallUser) > 0) {
                 /*更新session中的内容*/
+                MallUser userAfter = mallUserDaoMapper.selectByPrimaryKey(mallUser.getUserId());
                 MallUserVO mallUserVO = new MallUserVO();
-                BeanUtil.copyProperties(user,mallUserVO);
+                BeanUtil.copyProperties(userAfter, mallUserVO);
+                //昵称太长 影响页面展示，所以只显示一部分
+                if (mallUserVO.getNickName() != null && mallUserVO.getNickName().length() > 7) {
+                    String tempNickName = user.getNickName().substring(0, 7) + "..";
+                    mallUserVO.setNickName(tempNickName);
+                }
                 httpSession.setAttribute(Constants.MALL_USER_SESSION_KEY, mallUserVO);
                 return ServiceResultEnum.SUCCESS.getResult();
             }

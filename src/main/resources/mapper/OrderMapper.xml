@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zrzhen.huozhiwang.dao.OrderMapper">
+    <resultMap id="BaseResultMap" type="com.zrzhen.huozhiwang.entity.Order">
+        <id column="order_id" property="orderId"></id>
+        <result column="order_no" property="orderNo"></result>
+        <result column="user_id" property="userId"></result>
+        <result column="total_price" property="totalPrice"></result>
+        <result column="pay_status" property="payStatus"></result>
+        <result column="pay_type" property="payType"></result>
+        <result column="pay_time" property="payTime"></result>
+        <result column="order_status" property="orderStatus"></result>
+        <result column="extra_info" property="extraInfo"></result>
+        <result column="user_address" property="userAddress"></result>
+        <result column="is_deleted" property="isDeleted"></result>
+    </resultMap>
+    <sql id="colume_list">
+        order_id,order_no,user_id,total_price,pay_status,pay_type,pay_time,order_status,extra_info,user_address,is_deleted
+    </sql>
+    <!--插入order-->
+    <insert id="insertOrder" useGeneratedKeys="true"
+            keyProperty="orderId">
+        insert into mall_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">
+                order_id,
+            </if>
+            <if test="orderNo != null">
+                order_no,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="totalPrice != null">
+                total_price,
+            </if>
+            <if test="payStatus != null">
+                pay_status,
+            </if>
+            <if test="payType != null">
+                pay_type,
+            </if>
+            <if test="payTime != null">
+                pay_time,
+            </if>
+            <if test="orderStatus != null">
+                order_status,
+            </if>
+            <if test="extraInfo != null">
+                extra_info,
+            </if>
+            <if test="userAddress != null">
+                user_address,
+            </if>
+            <if test="isDeleted != null">
+                is_deleted,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">
+                #{orderId,jdbcType=BIGINT},
+            </if>
+            <if test="orderNo != null">
+                #{orderNo,jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=BIGINT},
+            </if>
+            <if test="totalPrice != null">
+                #{totalPrice,jdbcType=INTEGER},
+            </if>
+            <if test="payStatus != null">
+                #{payStatus,jdbcType=TINYINT},
+            </if>
+            <if test="payType != null">
+                #{payType,jdbcType=TINYINT},
+            </if>
+            <if test="payTime != null">
+                #{payTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orderStatus != null">
+                #{orderStatus,jdbcType=TINYINT},
+            </if>
+            <if test="extraInfo != null">
+                #{extraInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="userAddress != null">
+                #{userAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="isDeleted != null">
+                #{isDeleted,jdbcType=TINYINT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+
+    <select id="findOrderByOrderNo" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="colume_list"/>
+        from mall_order
+        where order_no = #{orderNo}
+    </select>
+
+    <update id="updatePayTypeAndOrderStatus">
+        update mall_order
+        <set>
+            pay_type = #{payType},order_status = #{orderStatus},pay_status = #{payStatus}
+        </set>
+        where order_no = #{orderNo}
+    </update>
+
+    <select id="selectMyOrder" resultMap="BaseResultMap">
+        select
+        <include refid="colume_list"/>
+        from mall_order
+        where user_id = #{userId}
+        and is_deleted = 0
+        limit #{start},#{limit}
+    </select>
+
+    <select id="selectCountByUserId" resultType="integer" parameterType="long">
+        select count(*) from mall_order
+        where user_id = #{userId}
+        and is_deleted = 0
+    </select>
+
+    <delete id="deleteOrder" parameterType="string">
+        delete from mall_order where order_no = #{orderNo}
+    </delete>
+
+</mapper>

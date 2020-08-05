@@ -3,6 +3,7 @@ package com.zrzhen.huozhiwang.controller.mall;
 import com.alibaba.fastjson.JSONObject;
 import com.zrzhen.huozhiwang.common.Constants;
 import com.zrzhen.huozhiwang.common.ServiceResultEnum;
+import com.zrzhen.huozhiwang.controller.vo.MallUserVO;
 import com.zrzhen.huozhiwang.entity.MallUser;
 import com.zrzhen.huozhiwang.service.UserService;
 import com.zrzhen.huozhiwang.util.Result;
@@ -114,7 +115,7 @@ public class PersonalController {
 
     @PostMapping("/personal/updateInfo")
     @ResponseBody
-    public Result updataInfo(@RequestBody MallUser mallUser,HttpSession httpSession){
+    public Result updataInfo(@RequestBody MallUser mallUser, HttpSession httpSession){
         //userService.updateInfo(mallUser);
         String result = userService.updateInfo(mallUser,httpSession);
         if(result.equalsIgnoreCase("success")){

@@ -4,7 +4,7 @@
     <resultMap id="Base_ResultMap" type="com.zrzhen.huozhiwang.entity.MallUser">
         <id column="user_id" property="userId" ></id>
         <result column="login_name" property="loginName"></result>
-        <result column="nick_nam" property="nickName"></result>
+        <result column="nick_name" property="nickName"></result>
         <result column="password_md5" property="passwordMd5"></result>
         <result column="introduce_sign" property="introduceSign"></result>
         <result column="address" property="address"></result>
@@ -103,31 +103,31 @@
         where user_id = #{userId,jdbcType=BIGINT}
     </select>
     <!--修改用户信息-->
-    <update id="updateByPrimaryKeySelective">
+    <update id="updateByPrimaryKeySelective" parameterType="com.zrzhen.huozhiwang.entity.MallUser">
         update mall_user
         <set>
-            <if test="nickName != null">
+            <if test="nickName != null and nickName != ''">
                 nick_name = #{nickName,jdbcType=VARCHAR},
             </if>
-            <if test="loginName != null">
+            <if test="loginName != null and loginName != ''">
                 login_name = #{loginName,jdbcType=VARCHAR},
             </if>
-            <if test="passwordMd5 != null">
+            <if test="passwordMd5 != null and passwordMd5 != '' ">
                 password_md5 = #{passwordMd5,jdbcType=VARCHAR},
             </if>
-            <if test="introduceSign != null">
+            <if test="introduceSign != null and introduceSign != ''">
                 introduce_sign = #{introduceSign,jdbcType=VARCHAR},
             </if>
-            <if test="address != null">
+            <if test="address != null and address != '' ">
                 address = #{address,jdbcType=VARCHAR},
             </if>
-            <if test="isDeleted != null">
+            <if test="isDeleted != null and isDeleted != '' ">
                 is_deleted = #{isDeleted,jdbcType=TINYINT},
             </if>
-            <if test="lockedFlag != null">
+            <if test="lockedFlag != null and lockedFlag != ''">
                 locked_flag = #{lockedFlag,jdbcType=TINYINT},
             </if>
-            <if test="createTime != null">
+            <if test="createTime != null and createTime != ''">
                 create_time = #{createTime,jdbcType=TIMESTAMP},
             </if>
         </set>

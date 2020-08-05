@@ -13,7 +13,7 @@ public class MallUserVO {
     private String introduceSign;
     private String address;
     private  int isDeleted;
-    private  int llockedFlag;
+    private  int lockedFlag;
     private int ShopCartItemCount;
 
     public Long getUserId() {
@@ -64,12 +64,12 @@ public class MallUserVO {
         this.isDeleted = isDeleted;
     }
 
-    public int getLlockedFlag() {
-        return llockedFlag;
+    public int getlockedFlag() {
+        return lockedFlag;
     }
 
-    public void setLlockedFlag(int llockedFlag) {
-        this.llockedFlag = llockedFlag;
+    public void setlockedFlag(int llockedFlag) {
+        this.lockedFlag = llockedFlag;
     }
 
     public int getShopCartItemCount() {

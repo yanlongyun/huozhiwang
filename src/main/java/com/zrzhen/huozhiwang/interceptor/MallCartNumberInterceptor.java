@@ -29,10 +29,14 @@ public class MallCartNumberInterceptor implements HandlerInterceptor {
             //如果当前为登陆状态，就查询数据库并设置购物车中的数量值
             MallUserVO mallUserVO = (MallUserVO) request.getSession().getAttribute(Constants.MALL_USER_SESSION_KEY);
             //设置购物车中的数量
-            System.out.println(mallUserVO.getUserId());
-            int count = shoppingCartItemMapper.selectCountByUserId(mallUserVO.getUserId());
-            mallUserVO.setShopCartItemCount(count);
-            request.getSession().setAttribute(Constants.MALL_USER_SESSION_KEY, mallUserVO);
+            Integer count = shoppingCartItemMapper.selectCountByUserId(mallUserVO.getUserId());
+            if (count!=null) {
+                mallUserVO.setShopCartItemCount(count);
+                request.getSession().setAttribute(Constants.MALL_USER_SESSION_KEY, mallUserVO);
+            }else {
+                mallUserVO.setShopCartItemCount(0);
+                request.getSession().setAttribute(Constants.MALL_USER_SESSION_KEY, mallUserVO);
+            }
         }
         return true;
     }

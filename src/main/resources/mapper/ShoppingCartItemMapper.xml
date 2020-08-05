@@ -15,7 +15,7 @@
   </sql>
 
     <!--根据userId获取购物车中的物品数量-->
-    <select id="selectCountByUserId" resultType="int">
+    <select id="selectCountByUserId" resultType="integer">
     select
     sum(goods_count)
     from shopping_cart_item
@@ -89,5 +89,9 @@
         where cart_item_id = #{cartItemId}
         limit 1
     </update>
+
+    <delete id="deleteShopCartItem">
+        delete from shopping_cart_item where user_id = #{userId}
+    </delete>
 
 </mapper>

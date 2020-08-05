@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface ShoppingCartItemMapper {
 
-    int selectCountByUserId(Long userId);
+    Integer selectCountByUserId(Long userId);
 
     int saveGoods(ShoppingCartItem shoppingCartItem);
 
@@ -21,4 +21,6 @@ public interface ShoppingCartItemMapper {
     ShoppingCartItem selectItemByGoodsIdAndUserId(@RequestParam("goodsId") Long goodsId,@RequestParam("userId") Long userId);
 
     int updateShoppingCartGoodsCount(@RequestParam("goodsCount") int goodsCount, @RequestParam("cartItemId") Long cartItemId);
+
+    int deleteShopCartItem(Long userId);
 }
