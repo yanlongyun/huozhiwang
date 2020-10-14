@@ -152,7 +152,7 @@ public class OrderController {
      */
     @PutMapping("/orders/{orderNo}/cancel")
     @ResponseBody
-    public Result cancelOrder(@PathVariable("orderNo") String orderNo) {
+    public Result cancelOrder(@PathVariable("orderNo") String orderNo) throws Exception {
         String result = orderService.cancelOrder(orderNo);
         if (result == ServiceResultEnum.SUCCESS.getResult()) {
             return ResultGenerator.genSuccessResult();

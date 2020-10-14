@@ -15,6 +15,7 @@ import com.zrzhen.huozhiwang.util.ResultGenerator;
 import org.apache.tomcat.util.bcel.Const;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpSession;
@@ -134,7 +135,7 @@ public class OrderServiceImpl implements OrderService {
             if (orderItemList != null) {
                 List<OrderItemVO> orderItemVOS = BeanUtil.copyList(orderItemList, OrderItemVO.class);
                 orderVO.setOrderStatus(order.getOrderStatus());
-                orderVO.setOrderStatusString(OrderStatusEnum.getNewBeeMallOrderStatusEnumByStatus(orderVO.getOrderStatus()).getName());
+                orderVO.setOrderStatusString(OrderStatusEnum.getMallOrderStatusEnumByStatus(orderVO.getOrderStatus()).getName());
                 orderVO.setPayTypeString(PayTypeEnum.getPayTypeEnumByType(orderVO.getPayType()).getName());
                 orderVO.setOrderItemVOS(orderItemVOS);
                 return orderVO;
@@ -194,14 +195,16 @@ public class OrderServiceImpl implements OrderService {
     * @createDate: 2020/8/5 21:52
     * @return: java.lang.String
     */
+    @Transactional
     @Override
-    public String cancelOrder(String orderNo) {
+    public String cancelOrder(String orderNo) throws Exception {
         /*先获取order*/
         Order order = orderMapper.findOrderByOrderNo(orderNo);
         int deleteOrder = orderMapper.deleteOrder(orderNo);
+        //int i = 1/0;
         int deleteOrderItem = orderItemMapper.deleteOrderItem(order.getOrderId());
         if(deleteOrder >0 && deleteOrderItem>0){
-            return ServiceResultEnum.SUCCESS.getResult();
+           return ServiceResultEnum.SUCCESS.getResult();
         }
         return ServiceResultEnum.FAIL.getResult();
     }

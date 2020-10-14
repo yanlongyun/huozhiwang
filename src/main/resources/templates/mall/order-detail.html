@@ -3,7 +3,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="mall/header::head-fragment('NewBee商城-订单详情','order-detail')">
 </head>
-<link rel="stylesheet" th:href="@{/admin/plugins/sweetalert/sweetalert.css}"/>
+<link rel="stylesheet" th:href="@{/mall/pluginssweetalert/sweetalert.css}"/>
 <body>
 <header th:replace="mall/header::header-fragment"></header>
 <!-- nav -->
@@ -224,8 +224,8 @@
 
 <div th:replace="mall/footer::footer-fragment"></div>
 <!-- jQuery -->
-<script th:src="@{/admin/plugins/jquery/jquery.min.js}"></script>
-<script th:src="@{/admin/plugins/sweetalert/sweetalert.min.js}"></script>
+<script th:src="@{/mall/plugins/jquery/jquery.min.js}"></script>
+<script th:src="@{/mall/plugins/sweetalert/sweetalert.min.js}"></script>
 <script type="text/javascript">
 
     function cancelOrder() {

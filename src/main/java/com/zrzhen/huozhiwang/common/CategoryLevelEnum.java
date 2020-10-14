@@ -17,10 +17,10 @@ public enum CategoryLevelEnum {
         this.name = name;
     }
 //定义一个外部直接访问的方法。
-    public static CategoryLevelEnum getNewBeeMallOrderStatusEnumByLevel(int level) {
-        for (CategoryLevelEnum newBeeMallCategoryLevelEnum : CategoryLevelEnum.values()) {
-            if (newBeeMallCategoryLevelEnum.getLevel() == level) {
-                return newBeeMallCategoryLevelEnum;
+    public static CategoryLevelEnum getMallOrderStatusEnumByLevel(int level) {
+        for (CategoryLevelEnum mallCategoryLevelEnum : CategoryLevelEnum.values()) {
+            if (mallCategoryLevelEnum.getLevel() == level) {
+                return mallCategoryLevelEnum;
             }
         }
         return DEFAULT;

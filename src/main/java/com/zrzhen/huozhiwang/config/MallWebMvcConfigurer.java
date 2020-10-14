@@ -2,6 +2,7 @@ package com.zrzhen.huozhiwang.config;
 
 import com.zrzhen.huozhiwang.common.Constants;
 import com.zrzhen.huozhiwang.interceptor.MallCartNumberInterceptor;
+import com.zrzhen.huozhiwang.interceptor.MallGoodsSearchInterceptor;
 import com.zrzhen.huozhiwang.interceptor.MallLoginInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +22,8 @@ public class MallWebMvcConfigurer implements WebMvcConfigurer {
     private MallLoginInterceptor mallLoginInterceptor;
     @Autowired
     private MallCartNumberInterceptor mallCartNumberInterceptor;
+    @Autowired
+    private MallGoodsSearchInterceptor mallGoodsSearchInterceptor;
 
     public void addInterceptors(InterceptorRegistry registry){
         /*添加一个拦截器，对购物车中的数量进行统一处理*/
@@ -34,6 +37,23 @@ public class MallWebMvcConfigurer implements WebMvcConfigurer {
                 .excludePathPatterns("/register")
                 .excludePathPatterns("/logout")
                 .excludePathPatterns("/admin/**")
+                .excludePathPatterns("/goods/detail/**")
+                .addPathPatterns("/shop-cart")
+                .addPathPatterns("/shop-cart/**")
+                .addPathPatterns("/saveOrder")
+                .addPathPatterns("/orders")
+                .addPathPatterns("/orders/**")
+                .addPathPatterns("/personal")
+                .addPathPatterns("/personal/updateInfo")
+                .addPathPatterns("/selectPayType")
+                .addPathPatterns("/payPage");
+        registry.addInterceptor(mallGoodsSearchInterceptor)
+                .excludePathPatterns("/")
+                .excludePathPatterns("/index")
+                .addPathPatterns("/login")
+                .addPathPatterns("/register")
+                .addPathPatterns("/logout")
+                .addPathPatterns("/search/**")
                 .addPathPatterns("/goods/detail/**")
                 .addPathPatterns("/shop-cart")
                 .addPathPatterns("/shop-cart/**")

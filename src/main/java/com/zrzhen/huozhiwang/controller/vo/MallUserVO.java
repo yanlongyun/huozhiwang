@@ -1,5 +1,7 @@
 package com.zrzhen.huozhiwang.controller.vo;
 
+import java.util.List;
+
 /**
  * @author: 慧燕
  * @date: 2020/7/30 16:08
@@ -15,6 +17,23 @@ public class MallUserVO {
     private  int isDeleted;
     private  int lockedFlag;
     private int ShopCartItemCount;
+    private int orderItemCount;
+
+    public int getLockedFlag() {
+        return lockedFlag;
+    }
+
+    public void setLockedFlag(int lockedFlag) {
+        this.lockedFlag = lockedFlag;
+    }
+
+    public int getOrderItemCount() {
+        return orderItemCount;
+    }
+
+    public void setOrderItemCount(int orderItemCount) {
+        this.orderItemCount = orderItemCount;
+    }
 
     public Long getUserId() {
         return userId;

@@ -6,10 +6,11 @@
     <title>货值网</title>
     <link rel="stylesheet" th:href="@{/mall/css/swiper.min.css}">
     <link rel="stylesheet" th:href="@{/mall/css/iconfont.css}">
+    <link rel="stylesheet" th:href="@{/mall/css/iconfont-order.css}">
     <link rel="stylesheet" th:href="@{/mall/css/common.css}">
     <link rel="stylesheet" th:href="@{/mall/styles/header.css}">
     <link rel="stylesheet" th:href="@{'/mall/styles/'+${path}+'.css'}">
-    <link rel="stylesheet" th:href="@{/admin/plugins/sweetalert/sweetalert.css}"/>
+    <link rel="stylesheet" th:href="@{/mall/plugins/sweetalert/sweetalert.css}"/>
     <meta name="keywords" content="货值网，Spring Boot 大型线上商城" />
     <meta name="description" content="货值网是一套电商系统，包括 商城系统及商城后台管理系统，基于 Spring Boot 2.X 及相关技术栈开发。
     前台商城系统包含首页门户、商品分类、新品上线、首页轮播、商品推荐、商品搜索、商品展示、购物车、订单结算、订单流程、个人订单管理、会员中心、帮助中心等模块。
@@ -33,17 +34,35 @@
         </div>
     </div>
 </nav>
+<div id="searchCategory" th:fragment="search-fragment" >
+    <div class="clearfix" >
+        <div class="all-list">
+            <th:block th:each="category : ${categories}">
+            <div class="item">
+                <th:block th:each="secondLevelCategory : ${category.secondLevelCategoryVOS}">
+                    <h5><span>·</span><a href="##"><th:block th:text="${secondLevelCategory.categoryName}"></th:block></a></h5>
+                    <div class="list clearfix">
+                    <div class="subitem">
+                                <dl class="fore1">
+                                        <th:block th:each="thirdLevelCategory : ${secondLevelCategory.thirdLevelCategoryVOS}">
+                                            <em><a href="#"th:href="@{'/search?goodsCategoryId='+${thirdLevelCategory.categoryId}}">
+                                                <th:block th:text="${thirdLevelCategory.categoryName}"></th:block>
+                                            </a></em>
+                                        </th:block>
+                                </dl>
+                        </div>
+                    </div>
+                </th:block>
+            </div>
+            </th:block>
+        </div>
+    </div>
+</div>
 <header id="header" th:fragment="header-fragment">
     <div class="center">
         <ul class="fl">
-            <li><a th:href="@{/index}">货值网</a></li>
-            <li><a th:href="@{/admin}">后台管理系统</a></li>
-            <li><a href="https://edu.csdn.net/course/detail/26258">课程视频</a></li>
-            <li><a href="https://juejin.im/book/5da2f9d4f265da5b81794d48?referrer=59199e22a22b9d0058279886">课程文档</a></li>
-            <li><a href="https://gitee.com/newbee-ltd/newbee-donate">捐赠</a></li>
-            <li><a href="https://github.com/newbee-ltd/newbee-mall/issues">问题反馈</a></li>
-            <li><a href="https://github.com/newbee-ltd/newbee-mall">GitHub 地址</a></li>
-            <li><a href="https://gitee.com/newbee-ltd/newbee-mall">码云Gitee 地址</a></li>
+            <li><a th:href="@{/index}">货值网首页</a></li>
+            <li class="search-list"><a href="#" >网站导航</a></li>
         </ul>
         <div class="fr">
             <th:block th:unless="${session.huozhiwangUser==null}">
@@ -52,11 +71,6 @@
                         <li>
                             <a th:href="@{/personal}">
                                 个人中心
-                            </a>
-                        </li>
-                        <li>
-                            <a th:href="@{/orders}">
-                                我的订单
                             </a>
                         </li>
                         <li>
@@ -76,6 +90,12 @@
                         <th:block th:text="${session.huozhiwangUser.shopCartItemCount}"></th:block>
                         )</a>
                 </div>
+                <div class="order">
+                        <a th:href="@{/orders}" style="color: white;"><i class="iconfont icon-dingdantubiao-"></i>
+                            我的订单(<th:block th:text="${session.huozhiwangUser.orderItemCount}"></th:block>
+                            )
+                        </a>
+                </div>
             </th:block>
             <th:block th:if="${session.huozhiwangUser==null}">
                 <ul class="login">
@@ -86,7 +106,13 @@
                     <a href="##" style="color: white;"><i class="iconfont icon-cart"></i>
                         购物车(0)</a>
                 </div>
+                <div class="order">
+                    <a th:href="@{/orders}" style="color: white;"><i class="iconfont icon-dingdantubiao-"></i>
+                        我的订单(0)
+                    </a>
+                </div>
             </th:block>
         </div>
     </div>
+
 </header>

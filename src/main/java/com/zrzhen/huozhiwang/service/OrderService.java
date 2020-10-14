@@ -26,5 +26,5 @@ public interface OrderService {
 
     OrderPageResultVO getOrderPageResult(Long userId, int currPage);
 
-    String cancelOrder(String orderNo);
+    String cancelOrder(String orderNo) throws Exception;
 }

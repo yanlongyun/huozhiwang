@@ -42,10 +42,19 @@ $('.all-sort-list > .item').hover(function () {
             $(this).children('.item-list').css('top', 3);
         }
     }
-
     $(this).addClass('hover');
     $(this).children('.item-list').css('display', 'block');
 }, function () {
     $(this).removeClass('hover');
     $(this).children('.item-list').css('display', 'none');
+});
+
+$('.search-list').hover(function () {
+    $(this).addClass('hover');
+    document.getElementById("searchCategory").style.display="block";
+});
+
+$('.all-list > .item > h5').hover(function () {
+    $(this).addClass('hover');
+    $(this).next('.list').css('display', 'block');
 });

@@ -5,6 +5,7 @@
 <body>
 
 <header th:replace="mall/header::header-fragment"></header>
+<div th:replace="mall/header::search-fragment"></div>
 <content id="content">
     <nav th:replace="mall/header::nav-fragment"></nav>
     <div id="banner">
@@ -343,14 +344,14 @@
 
 <div th:replace="mall/footer::footer-fragment"></div>
 <!-- jQuery -->
-<script th:src="@{/admin/plugins/jquery/jquery.min.js}"></script>
+<script th:src="@{/mall/plugins/jquery/jquery.min.js}"></script>
 <script th:src="@{/mall/js/search.js}" type="text/javascript"></script>
 <!-- jQuery UI 1.11.4 -->
-<script th:src="@{/admin/plugins/jQueryUI/jquery-ui.min.js}"></script>
+<script th:src="@{/mall/plugins/jQueryUI/jquery-ui.min.js}"></script>
 <!-- Bootstrap 4 -->
-<script th:src="@{/admin/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/mall/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
 <script th:src="@{/mall/js/swiper.min.js}" type="text/javascript"></script>
-<script th:src="@{/admin/plugins/sweetalert/sweetalert.min.js}"></script>
+<script th:src="@{/mall/plugins/sweetalert/sweetalert.min.js}"></script>
 <script th:src="@{/mall/js/index.js}" type="text/javascript"></script>
 <script th:src="@{/mall/js/search.js}" type="text/javascript"></script>
 </body>
